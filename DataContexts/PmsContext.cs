@@ -11,7 +11,6 @@ public partial class PmsContext : DbContext
     private string connectionString = String.Empty;
     public PmsContext()
     {
-        connectionString = " server = localhost; port = 3307; database = pms; user = pms; password = dotnet8;";
     }
     public PmsContext(string connectionString)
     {
