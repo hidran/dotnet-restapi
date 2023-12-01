@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using PmsApi.DataContexts;
+using PmsApi.DTO;
 using PmsApi.Models;
 
 namespace PmsApi.Controllers;
@@ -32,14 +34,41 @@ public class UsersController : ControllerBase
         return Ok(user);
     }
     [HttpPost]
-    public async Task<ActionResult> CreateUser([FromBody] User user)
+    public async Task<ActionResult> CreateUser([FromBody] CreateUserDto userDto)
     {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var user = new User
+        {
+            Username = userDto.UserName,
+            LastName = userDto.LastName,
+            Email = userDto.Email,
+            RoleId = userDto.RoleId
+        };
+
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
-        // api/users/5
-        // return Ok(user);
-        // return route('api/users', [id => 2])
-        return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+        try
+        {
+            await _context.SaveChangesAsync();
+            // api/users/5
+            // return Ok(user);
+            // return route('api/users', [id => 2])
+            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+        }
+        catch (DbUpdateException e)
+        when (e.InnerException is MySqlException
+         mySqlException && mySqlException.Number == 1062)
+        {
+
+            return BadRequest("Email already taken");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error has occurred");
+        }
     }
 }
 
