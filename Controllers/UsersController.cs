@@ -31,5 +31,15 @@ public class UsersController : ControllerBase
         }
         return Ok(user);
     }
+    [HttpPost]
+    public async Task<ActionResult> CreateUser([FromBody] User user)
+    {
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
+        // api/users/5
+        // return Ok(user);
+        // return route('api/users', [id => 2])
+        return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, user);
+    }
 }
 
