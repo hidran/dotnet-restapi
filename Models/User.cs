@@ -18,9 +18,9 @@ public class User
 
     public int RoleId { get; set; } = 0;
 
-    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
 
-    public virtual Role? Role { get; set; }
+    public Role? Role { get; set; }
 
-    public virtual ICollection<Task> Tasks { get; set; } = new List<Task>();
+    public ICollection<Task> Tasks { get; set; } = new List<Task>();
 }

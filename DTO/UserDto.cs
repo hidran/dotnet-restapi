@@ -1,11 +1,14 @@
 namespace PmsApi.DTO;
 
-public class UserDto
-{
-    public string UserName { get; set; } = string.Empty;
-    public string FirstName { get; set; } = string.Empty;
-    public string LastName { get; set; } = string.Empty;
+public record UserDto
+(
+     int UserId,
+    string UserName,
+    string FirstName,
+    string LastName,
 
-    public string Email { get; set; } = string.Empty;
-    public int RoleId { get; set; }
-}
+    string Email,
+    int RoleId,
+    List<TaskDto> Tasks,
+    List<ProjectDto> Projects
+);
