@@ -99,69 +99,69 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, "An error has occurred");
         }
     }
-    // //[HttpPatch("{userId:int}")]
-    // public async Task<ActionResult> UpdateUser(
-    //     [FromRoute] int userId, [FromBody] UpdateUserDto userDto
-    //     )
-    // {
-    //     if (!ModelState.IsValid)
-    //     {
-    //         return BadRequest(ModelState);
-    //     }
+    [HttpPut("{projectId:int}")]
+    public async Task<ActionResult> UpdateProject(
+        [FromRoute] int projectId, [FromBody] CreateProjectDto projectDto
+        )
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
 
-    //     User? user = await _context.Users.FindAsync(userId);
+        Project? project = await _context.Projects.FindAsync(projectId);
 
-    //     if (user is null)
-    //     {
-    //         return NotFound($"User with ID {userId} not found.");
-    //     }
+        if (project is null)
+        {
+            return NotFound($"Project with ID {projectId} not found.");
+        }
 
-    //     _mapper.Map(userDto, user);
-    //     try
-    //     {
-    //         await _context.SaveChangesAsync();
+        _mapper.Map(projectDto, project);
+        try
+        {
+            await _context.SaveChangesAsync();
 
-    //         return NoContent();
-    //     }
-    //     catch (DbUpdateException e)
-    //     when (e.InnerException is MySqlException
-    //      mySqlException && mySqlException.Number == 1062)
-    //     {
+            return NoContent();
+        }
+        catch (DbUpdateException e)
+        when (e.InnerException is MySqlException
+         mySqlException && mySqlException.Number == 1062)
+        {
 
-    //         return BadRequest("Email already taken");
-    //     }
-    //     catch (Exception)
-    //     {
-    //         return StatusCode(500, "An error has occurred");
-    //     }
-    // }
+            return BadRequest("Project name already taken");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error has occurred");
+        }
+    }
 
 
-    // // [HttpDelete("{userId:int}")]
-    // public async Task<ActionResult> DeleteUser(int userId)
-    // {
-    //     User? user = await _context.Users.FindAsync(userId);
+    [HttpDelete("{projectId:int}")]
+    public async Task<ActionResult> DeleteProject(int projectId)
+    {
+        Project? project = await _context.Projects.FindAsync(projectId);
 
-    //     if (user is null)
-    //     {
-    //         return NotFound($"No User found with ID {userId}");
-    //     }
-    //     try
-    //     {
-    //         _context.Users.Remove(user);
-    //         await _context.SaveChangesAsync();
-    //         return NoContent();
-    //     }
-    //     catch (DbUpdateException e)
-    //   when (e.InnerException is MySqlException)
-    //     {
+        if (project is null)
+        {
+            return NotFound($"No project found with ID {projectId}");
+        }
+        try
+        {
+            _context.Projects.Remove(project);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+        catch (DbUpdateException e)
+      when (e.InnerException is MySqlException)
+        {
 
-    //         return BadRequest("User has other records, please delete assigned tasks");
-    //     }
-    //     catch (Exception)
-    //     {
-    //         return StatusCode(500, "An error has occurred");
-    //     }
+            return BadRequest("Project has other records, please delete assigned tasks");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error has occurred");
+        }
 
-    // }
+    }
 }
