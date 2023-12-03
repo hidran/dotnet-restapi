@@ -12,11 +12,16 @@ class UserProfile : Profile
 
         CreateMap<CreateUserDto, User>();
         CreateMap<UpdateUserDto, User>();
+        CreateMap<User, UserOnlyDto>();
         CreateMap<User, UserDto>()
         .ForMember(d => d.Projects, opt => opt.MapFrom(src => src.Projects))
         .ForMember(d => d.Tasks, opt => opt.MapFrom(src => src.Tasks)); ;
         CreateMap<Project, ProjectDto>();
+        CreateMap<Project, ProjectWithTasksDto>()
+        .ForMember(d => d.Manager, opt => opt.MapFrom(src => src.Manager));
+
         CreateMap<Task, TaskDto>();
+        CreateMap<ProjectCategory, CategoryDto>();
 
 
     }

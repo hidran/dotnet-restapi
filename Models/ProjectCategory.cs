@@ -4,7 +4,7 @@ public class ProjectCategory
 {
     public int CategoryId { get; set; }
 
-    public string CategoryName { get; set; } = null!;
+    public string CategoryName { get; set; } = "";
 
-    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    public ICollection<Project> Projects { get; set; } = new List<Project>();
 }
