@@ -7,7 +7,7 @@ using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
 
-namespace Controllers;
+namespace PmsApi.Controllers;
 
 [ApiController]
 [Route("api/projects")]
@@ -21,7 +21,23 @@ public class ProjectsController : ControllerBase
         _context = context;
         _mapper = mapper;
     }
-    [HttpGet]
+
+    [HttpGet("{projectId}/tasks")]
+    public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjectTasks(int projectId)
+    {
+
+        var project = await _context.Projects.Include(p => p.Tasks)
+            .Where(p => p.ProjectId == projectId)
+
+        .ToListAsync();
+        if (project is null || project.Count == 0)
+        {
+            return NotFound();
+        }
+        var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(project);
+        return Ok(projectsDto);
+    }
+    [HttpGet()]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();

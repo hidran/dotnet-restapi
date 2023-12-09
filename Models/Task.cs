@@ -24,9 +24,9 @@ public class Task
 
     public int? AssignedUserId { get; set; }
 
-    public virtual User? AssignedUser { get; set; }
+    public User? AssignedUser { get; set; }
 
-    public virtual Project? Project { get; set; }
+    public Project? Project { get; set; }
 
-    public virtual ICollection<TaskAttachment> TaskAttachments { get; set; } = new List<TaskAttachment>();
+    public ICollection<TaskAttachment> TaskAttachments { get; set; } = new List<TaskAttachment>();
 }

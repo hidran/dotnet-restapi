@@ -5,7 +5,7 @@ public record ProjectDto(
 
      string ProjectName,
 
-     string? Description,
+     string Description,
 
      DateOnly StartDate,
 

@@ -1,4 +1,7 @@
-public record UserOnlyDto(int UserId,
+namespace PmsApi.DTO;
+
+public record UserOnlyDto(
+    int UserId,
     string UserName,
     string FirstName,
     string LastName,
