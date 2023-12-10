@@ -68,4 +68,41 @@ public class TasksController : ControllerBase
         }
     }
 
+    [HttpPut("{taskId:int}")]
+    public async Task<ActionResult> UpdateTask(
+          [FromRoute] int taskId, [FromBody] CreateTaskDto taskDto
+          )
+    {
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        Task? task = await _context.Tasks.FindAsync(taskId);
+
+        if (task is null)
+        {
+            return NotFound($"Project with ID {taskId} not found.");
+        }
+
+        _mapper.Map(taskDto, task);
+        try
+        {
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        catch (DbUpdateException e)
+        when (e.InnerException is MySqlConnector.MySqlException
+         mySqlException && mySqlException.Number == 1062)
+        {
+
+            return BadRequest("Task name already taken");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error has occurred");
+        }
+    }
+
 }
