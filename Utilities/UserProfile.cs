@@ -22,6 +22,8 @@ class UserProfile : Profile
          .ForMember(d => d.Manager, opt => opt.MapFrom(src => src.Manager));
 
         CreateMap<Task, TaskDto>();
+        CreateMap<CreateTaskDto, Task>();
+
         CreateMap<Task, TaskAllDto>();
 
 
