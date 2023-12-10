@@ -105,4 +105,39 @@ public class TasksController : ControllerBase
         }
     }
 
+
+    [HttpDelete("{taskId:int}")]
+    public async Task<ActionResult> DeleteTask(int taskId)
+    {
+        Task? task = await _context.Tasks.FindAsync(taskId);
+
+        if (task is null)
+        {
+            return NotFound($"No Task found with ID {taskId}");
+        }
+        try
+        {
+            _context.Tasks.Remove(task);
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+        catch (DbUpdateException e)
+      when (e.InnerException is MySqlConnector.MySqlException)
+        {
+
+            return BadRequest("Task has other records, please delete assigned attachments");
+        }
+        catch (Exception)
+        {
+            return StatusCode(500, "An error has occurred");
+        }
+
+    }
+
+
+
+
+
+
+
 }
