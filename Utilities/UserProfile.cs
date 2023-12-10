@@ -27,7 +27,8 @@ class UserProfile : Profile
         CreateMap<Task, TaskAllDto>();
 
 
-        CreateMap<TaskAttachment, TaskAttachmentDto>();
+        CreateMap<TaskAttachment, AttachmentWithTaskDto>();
+        //   .ForMember(d => d.Task, opt => opt.MapFrom(src => src.Task));
         CreateMap<ProjectCategory, CategoryDto>();
 
 

@@ -137,7 +137,17 @@ public class TasksController : ControllerBase
 
 
 
+    [HttpGet("{taskId}/attachments")]
+    public async Task<ActionResult<IEnumerable<AttachmentWithTaskDto>>>
+         GetTaskAttachments(int taskId)
+    {
+        var taskAttachments = await _context.TaskAttachments.Include(x => x.Task)
+        .Where(x => x.TaskId == taskId).ToListAsync();
 
+
+        var taskAttachmentsDto = _mapper.Map<IEnumerable<AttachmentWithTaskDto>>(taskAttachments);
+        return Ok(taskAttachmentsDto);
+    }
 
 
 }
