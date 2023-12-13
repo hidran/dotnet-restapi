@@ -25,6 +25,9 @@ class UserProfile : Profile
         CreateMap<Status, StatusDto>();
         CreateMap<CreateStatusDto, Status>();
 
+        CreateMap<ProjectCategory, CategoryDto>();
+        CreateMap<CreateCategoryDto, ProjectCategory>();
+
         CreateMap<CreateProjectDto, Project>();
         CreateMap<Project, ProjectWithTasksDto>()
          .ForMember(d => d.Manager, opt => opt.MapFrom(src => src.Manager));
