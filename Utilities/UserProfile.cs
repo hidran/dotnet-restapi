@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 using AutoMapper;
+using DTO;
 using PmsApi.DTO;
 using PmsApi.Models;
 using Task = PmsApi.Models.Task;
@@ -17,6 +18,8 @@ class UserProfile : Profile
         .ForMember(d => d.Projects, opt => opt.MapFrom(src => src.Projects))
         .ForMember(d => d.Tasks, opt => opt.MapFrom(src => src.Tasks)); ;
         CreateMap<Project, ProjectDto>();
+        CreateMap<Priority, PriorityDto>();
+        CreateMap<CreatePriorityDto, Priority>();
         CreateMap<CreateProjectDto, Project>();
         CreateMap<Project, ProjectWithTasksDto>()
          .ForMember(d => d.Manager, opt => opt.MapFrom(src => src.Manager));

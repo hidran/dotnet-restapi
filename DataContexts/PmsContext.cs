@@ -6,9 +6,9 @@ using PmsApi.Models;
 
 namespace PmsApi.DataContexts;
 
-public partial class PmsContext : DbContext
+public class PmsContext : DbContext
 {
-    private string connectionString = String.Empty;
+    private readonly string connectionString = String.Empty;
     public PmsContext()
     {
     }
@@ -23,18 +23,20 @@ public partial class PmsContext : DbContext
     {
     }
 
-    public virtual DbSet<Project> Projects { get; set; }
+    public DbSet<Project> Projects { get; set; }
 
-    public virtual DbSet<ProjectCategory> ProjectCategories { get; set; }
+    public DbSet<ProjectCategory> ProjectCategories { get; set; }
 
-    public virtual DbSet<Role> Roles { get; set; }
+    public DbSet<Role> Roles { get; set; }
 
-    public virtual DbSet<Task> Tasks { get; set; }
+    public DbSet<Task> Tasks { get; set; }
 
-    public virtual DbSet<TaskAttachment> TaskAttachments { get; set; }
+    public DbSet<TaskAttachment> TaskAttachments { get; set; }
 
-    public virtual DbSet<User> Users { get; set; }
-
+    public DbSet<User> Users { get; set; }
+    public DbSet<Priority> Priorities { get; set; }
+    public DbSet<Status> Statuses { get; set; }
+    public DbSet<ProjectCategory> Categories { get; set; }
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         if (connectionString != String.Empty)
@@ -115,7 +117,6 @@ public partial class PmsContext : DbContext
 
 
         populateDatabase(modelBuilder);
-        OnModelCreatingPartial(modelBuilder);
 
 
     }
@@ -211,7 +212,6 @@ public partial class PmsContext : DbContext
         });
     }
 
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 
     private void populateDatabase(ModelBuilder modelBuilder)
     {

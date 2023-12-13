@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PmsApi.DataContexts;
 
@@ -10,9 +11,11 @@ using PmsApi.DataContexts;
 namespace PmsApi.Migrations
 {
     [DbContext(typeof(PmsContext))]
-    partial class PmsContextModelSnapshot : ModelSnapshot
+    [Migration("20231213225023_PrioritiesTable")]
+    partial class PrioritiesTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
