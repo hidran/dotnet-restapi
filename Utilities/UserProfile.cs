@@ -18,8 +18,13 @@ class UserProfile : Profile
         .ForMember(d => d.Projects, opt => opt.MapFrom(src => src.Projects))
         .ForMember(d => d.Tasks, opt => opt.MapFrom(src => src.Tasks)); ;
         CreateMap<Project, ProjectDto>();
+
         CreateMap<Priority, PriorityDto>();
         CreateMap<CreatePriorityDto, Priority>();
+
+        CreateMap<Status, StatusDto>();
+        CreateMap<CreateStatusDto, Status>();
+
         CreateMap<CreateProjectDto, Project>();
         CreateMap<Project, ProjectWithTasksDto>()
          .ForMember(d => d.Manager, opt => opt.MapFrom(src => src.Manager));

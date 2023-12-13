@@ -10,7 +10,7 @@ using PmsApi.Models;
 namespace Controllers;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/priorities")]
 public class PrioritiesController : ControllerBase
 {
     private readonly PmsContext _context;
