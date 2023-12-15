@@ -35,9 +35,8 @@ public class StatusController : ControllerBase
     [HttpGet("{statusId}")]
     public async Task<ActionResult<StatusDto>> GetStatus(int statusId)
     {
-        var statusesQuery = _context.Statuses.AsQueryable();
 
-        Status? status = await statusesQuery.FirstOrDefaultAsync(p => p.StatusId == statusId);
+        Status? status = await _context.Statuses.FirstOrDefaultAsync(p => p.StatusId == statusId);
         if (status is null)
         {
             return NotFound();

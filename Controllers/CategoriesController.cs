@@ -35,7 +35,6 @@ public class CategoriesController : ControllerBase
     [HttpGet("{categoryId}")]
     public async Task<ActionResult<CategoryDto>> GetCategory(int categoryId)
     {
-        var categoriesQuery = _context.Categories.AsQueryable();
 
         ProjectCategory? category = await _context.Categories.FirstOrDefaultAsync(p => p.CategoryId == categoryId);
         if (category is null)

@@ -35,9 +35,8 @@ public class PrioritiesController : ControllerBase
     [HttpGet("{priorityId}")]
     public async Task<ActionResult<PriorityDto>> GetPriority(int priorityId)
     {
-        var prioritiesQuery = _context.Priorities.AsQueryable();
 
-        Priority? priority = await prioritiesQuery.FirstOrDefaultAsync(p => p.PriorityId == priorityId);
+        Priority? priority = await _context.Priorities.FirstOrDefaultAsync(p => p.PriorityId == priorityId);
         if (priority is null)
         {
             return NotFound();
