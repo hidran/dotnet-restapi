@@ -11,19 +11,226 @@ using PmsApi.DataContexts;
 namespace PmsApi.Migrations
 {
     [DbContext(typeof(PmsContext))]
-    [Migration("20231213225023_PrioritiesTable")]
-    partial class PrioritiesTable
+    [Migration("20231217225024_IdentityUpdate")]
+    partial class IdentityUpdate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .UseCollation("utf8mb4_0900_ai_ci")
                 .HasAnnotation("ProductVersion", "8.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
-            MySqlModelBuilderExtensions.HasCharSet(modelBuilder, "utf8mb4");
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("varchar(13)");
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedName")
+                        .IsUnique()
+                        .HasDatabaseName("RoleNameIndex");
+
+                    b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityRole");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("RoleId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetRoleClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUser", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<int>("AccessFailedCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ConcurrencyStamp")
+                        .IsConcurrencyToken()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("Discriminator")
+                        .IsRequired()
+                        .HasMaxLength(13)
+                        .HasColumnType("varchar(13)");
+
+                    b.Property<string>("Email")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<bool>("EmailConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("LockoutEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<DateTimeOffset?>("LockoutEnd")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<string>("NormalizedEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("NormalizedUserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<string>("PasswordHash")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("PhoneNumberConfirmed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("SecurityStamp")
+                        .HasColumnType("longtext");
+
+                    b.Property<bool>("TwoFactorEnabled")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("UserName")
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("NormalizedEmail")
+                        .HasDatabaseName("EmailIndex");
+
+                    b.HasIndex("NormalizedUserName")
+                        .IsUnique()
+                        .HasDatabaseName("UserNameIndex");
+
+                    b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasDiscriminator<string>("Discriminator").HasValue("IdentityUser");
+
+                    b.UseTphMappingStrategy();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("ClaimType")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("ClaimValue")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserClaims", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderKey")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("ProviderDisplayName")
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("LoginProvider", "ProviderKey");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AspNetUserLogins", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("RoleId")
+                        .HasColumnType("varchar(255)");
+
+                    b.HasKey("UserId", "RoleId");
+
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("AspNetUserRoles", (string)null);
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.Property<string>("UserId")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("LoginProvider")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("varchar(255)");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("longtext");
+
+                    b.HasKey("UserId", "LoginProvider", "Name");
+
+                    b.ToTable("AspNetUserTokens", (string)null);
+                });
 
             modelBuilder.Entity("PmsApi.Models.Priority", b =>
                 {
@@ -82,8 +289,9 @@ namespace PmsApi.Migrations
                     b.Property<DateOnly>("EndDate")
                         .HasColumnType("date");
 
-                    b.Property<int>("ManagerId")
-                        .HasColumnType("int");
+                    b.Property<string>("ManagerId")
+                        .IsRequired()
+                        .HasColumnType("varchar(255)");
 
                     b.Property<string>("ProjectName")
                         .IsRequired()
@@ -104,108 +312,6 @@ namespace PmsApi.Migrations
                         .IsUnique();
 
                     b.ToTable("Projects");
-
-                    b.HasData(
-                        new
-                        {
-                            ProjectId = 1,
-                            CategoryId = 1,
-                            Description = "Descrizione del Progetto Alfa",
-                            EndDate = new DateOnly(2021, 6, 30),
-                            ManagerId = 1,
-                            ProjectName = "Progetto Alfa",
-                            StartDate = new DateOnly(2021, 1, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 2,
-                            CategoryId = 2,
-                            Description = "Descrizione del Progetto Beta",
-                            EndDate = new DateOnly(2021, 12, 31),
-                            ManagerId = 2,
-                            ProjectName = "Progetto Beta",
-                            StartDate = new DateOnly(2021, 7, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 3,
-                            CategoryId = 3,
-                            Description = "Descrizione del Progetto Gamma",
-                            EndDate = new DateOnly(2022, 6, 30),
-                            ManagerId = 3,
-                            ProjectName = "Progetto Gamma",
-                            StartDate = new DateOnly(2022, 1, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 4,
-                            CategoryId = 4,
-                            Description = "Descrizione del Progetto Delta",
-                            EndDate = new DateOnly(2022, 12, 31),
-                            ManagerId = 4,
-                            ProjectName = "Progetto Delta",
-                            StartDate = new DateOnly(2022, 7, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 5,
-                            CategoryId = 5,
-                            Description = "Descrizione del Progetto Epsilon",
-                            EndDate = new DateOnly(2023, 6, 30),
-                            ManagerId = 5,
-                            ProjectName = "Progetto Epsilon",
-                            StartDate = new DateOnly(2023, 1, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 6,
-                            CategoryId = 6,
-                            Description = "Descrizione del Progetto Zeta",
-                            EndDate = new DateOnly(2023, 12, 31),
-                            ManagerId = 5,
-                            ProjectName = "Progetto Zeta",
-                            StartDate = new DateOnly(2023, 7, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 7,
-                            CategoryId = 7,
-                            Description = "Descrizione del Progetto Eta",
-                            EndDate = new DateOnly(2024, 6, 30),
-                            ManagerId = 4,
-                            ProjectName = "Progetto Eta",
-                            StartDate = new DateOnly(2024, 1, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 8,
-                            CategoryId = 8,
-                            Description = "Descrizione del Progetto Theta",
-                            EndDate = new DateOnly(2024, 12, 31),
-                            ManagerId = 3,
-                            ProjectName = "Progetto Theta",
-                            StartDate = new DateOnly(2024, 7, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 9,
-                            CategoryId = 9,
-                            Description = "Descrizione del Progetto Iota",
-                            EndDate = new DateOnly(2025, 6, 30),
-                            ManagerId = 5,
-                            ProjectName = "Progetto Iota",
-                            StartDate = new DateOnly(2025, 1, 1)
-                        },
-                        new
-                        {
-                            ProjectId = 10,
-                            CategoryId = 10,
-                            Description = "Descrizione del Progetto Kappa",
-                            EndDate = new DateOnly(2025, 12, 31),
-                            ManagerId = 4,
-                            ProjectName = "Progetto Kappa",
-                            StartDate = new DateOnly(2025, 7, 1)
-                        });
                 });
 
             modelBuilder.Entity("PmsApi.Models.ProjectCategory", b =>
@@ -327,125 +433,6 @@ namespace PmsApi.Migrations
                         });
                 });
 
-            modelBuilder.Entity("PmsApi.Models.Role", b =>
-                {
-                    b.Property<int>("RoleId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasMaxLength(255)
-                        .HasColumnType("varchar(255)");
-
-                    b.HasKey("RoleId")
-                        .HasName("PRIMARY");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            RoleName = "Admin"
-                        },
-                        new
-                        {
-                            RoleId = 2,
-                            RoleName = "Manager"
-                        },
-                        new
-                        {
-                            RoleId = 3,
-                            RoleName = "Developer"
-                        },
-                        new
-                        {
-                            RoleId = 4,
-                            RoleName = "Designer"
-                        },
-                        new
-                        {
-                            RoleId = 5,
-                            RoleName = "Tester"
-                        },
-                        new
-                        {
-                            RoleId = 6,
-                            RoleName = "HR"
-                        },
-                        new
-                        {
-                            RoleId = 7,
-                            RoleName = "Sales"
-                        },
-                        new
-                        {
-                            RoleId = 8,
-                            RoleName = "Marketing"
-                        },
-                        new
-                        {
-                            RoleId = 9,
-                            RoleName = "Support"
-                        },
-                        new
-                        {
-                            RoleId = 10,
-                            RoleName = "Customer Service"
-                        },
-                        new
-                        {
-                            RoleId = 11,
-                            RoleName = "Finance"
-                        },
-                        new
-                        {
-                            RoleId = 12,
-                            RoleName = "Legal"
-                        },
-                        new
-                        {
-                            RoleId = 13,
-                            RoleName = "Public Relations"
-                        },
-                        new
-                        {
-                            RoleId = 14,
-                            RoleName = "Operations"
-                        },
-                        new
-                        {
-                            RoleId = 15,
-                            RoleName = "IT"
-                        },
-                        new
-                        {
-                            RoleId = 16,
-                            RoleName = "Product Manager"
-                        },
-                        new
-                        {
-                            RoleId = 17,
-                            RoleName = "Data Analyst"
-                        },
-                        new
-                        {
-                            RoleId = 18,
-                            RoleName = "Business Analyst"
-                        },
-                        new
-                        {
-                            RoleId = 19,
-                            RoleName = "Executive"
-                        },
-                        new
-                        {
-                            RoleId = 20,
-                            RoleName = "Intern"
-                        });
-                });
-
             modelBuilder.Entity("PmsApi.Models.Status", b =>
                 {
                     b.Property<int>("StatusId")
@@ -488,9 +475,9 @@ namespace PmsApi.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int?>("AssignedUserId")
+                    b.Property<string>("AssignedUserId")
                         .IsRequired()
-                        .HasColumnType("int");
+                        .HasColumnType("varchar(255)");
 
                     b.Property<DateOnly>("CreatedDate")
                         .HasColumnType("date");
@@ -527,44 +514,6 @@ namespace PmsApi.Migrations
                     b.HasIndex("StatusId");
 
                     b.ToTable("Tasks");
-
-                    b.HasData(
-                        new
-                        {
-                            TaskId = 1,
-                            AssignedUserId = 1,
-                            CreatedDate = new DateOnly(2021, 1, 1),
-                            Description = "Descrizione Task 1",
-                            DueDate = new DateOnly(2021, 6, 30),
-                            PriorityId = 1,
-                            ProjectId = 1,
-                            StatusId = 1,
-                            Title = "Task 1"
-                        },
-                        new
-                        {
-                            TaskId = 2,
-                            AssignedUserId = 2,
-                            CreatedDate = new DateOnly(2021, 2, 1),
-                            Description = "Descrizione Task 2",
-                            DueDate = new DateOnly(2021, 7, 30),
-                            PriorityId = 2,
-                            ProjectId = 2,
-                            StatusId = 2,
-                            Title = "Task 2"
-                        },
-                        new
-                        {
-                            TaskId = 3,
-                            AssignedUserId = 3,
-                            CreatedDate = new DateOnly(2021, 3, 1),
-                            Description = "Descrizione Task 3",
-                            DueDate = new DateOnly(2021, 8, 30),
-                            PriorityId = 3,
-                            ProjectId = 3,
-                            StatusId = 3,
-                            Title = "Task 3"
-                        });
                 });
 
             modelBuilder.Entity("PmsApi.Models.TaskAttachment", b =>
@@ -590,129 +539,179 @@ namespace PmsApi.Migrations
                     b.HasIndex("TaskId");
 
                     b.ToTable("TaskAttachments");
+                });
+
+            modelBuilder.Entity("PmsApi.Models.Role", b =>
+                {
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityRole");
+
+                    b.HasDiscriminator().HasValue("Role");
 
                     b.HasData(
                         new
                         {
-                            Id = 1,
-                            FileName = "Attachment1.pdf",
-                            TaskId = 1
+                            Id = "0e32808f-df1a-4da3-99a2-3b93d3f0c8aa",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = 2,
-                            FileName = "Attachment2.pdf",
-                            TaskId = 1
+                            Id = "b2f874f5-f58c-4c74-b179-a6696b8ec166",
+                            Name = "Editor",
+                            NormalizedName = "Editor"
                         },
                         new
                         {
-                            Id = 3,
-                            FileName = "Attachment3.pdf",
-                            TaskId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            FileName = "Attachment4.pdf",
-                            TaskId = 2
+                            Id = "538cfac7-1b7c-4fff-b614-a0b55e9562f6",
+                            Name = "User",
+                            NormalizedName = "User"
                         });
                 });
 
             modelBuilder.Entity("PmsApi.Models.User", b =>
                 {
-                    b.Property<int>("UserId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                    b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
 
                     b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
                     b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
+                        .HasColumnType("longtext");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasMaxLength(255)
+                    b.Property<string>("RoleId")
                         .HasColumnType("varchar(255)");
-
-                    b.Property<int>("RoleId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.HasKey("UserId")
-                        .HasName("PRIMARY");
-
-                    b.HasIndex("Email")
-                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.HasDiscriminator().HasValue("User");
 
                     b.HasData(
                         new
                         {
-                            UserId = 1,
+                            Id = "7b461bb1-cfb9-477d-9ef0-c68d4969a384",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "6c7ed0c9-1583-4591-baaa-3ac4cec09994",
                             Email = "emma.stone@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "761060db-7c3d-4df8-90e5-a7b5b7a5361c",
+                            TwoFactorEnabled = false,
+                            UserName = "user1",
                             FirstName = "Emma",
-                            LastName = "Stone",
-                            Password = "pass123",
-                            RoleId = 1,
-                            Username = "user1"
+                            LastName = "Stone"
                         },
                         new
                         {
-                            UserId = 2,
+                            Id = "1a628e2f-7437-44cc-a0e3-60e2e830462d",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "0d385d0c-14fa-41d2-87e8-26d8c3e1bfcf",
                             Email = "liam.smith@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "5cccfef3-5b42-434d-8a95-aaad0e1be1b1",
+                            TwoFactorEnabled = false,
+                            UserName = "user2",
                             FirstName = "Liam",
-                            LastName = "Smith",
-                            Password = "pass123",
-                            RoleId = 2,
-                            Username = "user2"
+                            LastName = "Smith"
                         },
                         new
                         {
-                            UserId = 3,
+                            Id = "766536f2-6966-42ba-92e6-abbd044b285e",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "2edd87b7-3176-4047-8e77-6a041ccecc9c",
                             Email = "olivia.jones@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "3db0760f-45fb-4634-a495-072a8e5c6479",
+                            TwoFactorEnabled = false,
+                            UserName = "user3",
                             FirstName = "Olivia",
-                            LastName = "Jones",
-                            Password = "pass123",
-                            RoleId = 3,
-                            Username = "user3"
+                            LastName = "Jones"
                         },
                         new
                         {
-                            UserId = 4,
+                            Id = "03297460-25e5-455f-aa9c-2e2dabaf2e40",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "d6a75347-1260-4fa9-8e06-0c26454b85cb",
                             Email = "noah.brown@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "181e9b89-3b79-4649-bc1d-761b296a24d3",
+                            TwoFactorEnabled = false,
+                            UserName = "user4",
                             FirstName = "Noah",
-                            LastName = "Brown",
-                            Password = "pass123",
-                            RoleId = 4,
-                            Username = "user4"
+                            LastName = "Brown"
                         },
                         new
                         {
-                            UserId = 5,
+                            Id = "4da805c0-248e-4943-9289-59135d249a5f",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "53bcc1c7-a77e-4646-a386-33dc84ab532f",
                             Email = "jacob.williams@mail.com",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "c0de5adc-dc0a-4070-9439-0794227e9ea1",
+                            TwoFactorEnabled = false,
+                            UserName = "user5",
                             FirstName = "Jacob",
-                            LastName = "Williams",
-                            Password = "pass123",
-                            RoleId = 5,
-                            Username = "user5"
+                            LastName = "Williams"
                         });
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+                {
+                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", null)
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("PmsApi.Models.Project", b =>
@@ -780,13 +779,9 @@ namespace PmsApi.Migrations
 
             modelBuilder.Entity("PmsApi.Models.User", b =>
                 {
-                    b.HasOne("PmsApi.Models.Role", "Role")
+                    b.HasOne("PmsApi.Models.Role", null)
                         .WithMany("Users")
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Role");
+                        .HasForeignKey("RoleId");
                 });
 
             modelBuilder.Entity("PmsApi.Models.Project", b =>
@@ -799,14 +794,14 @@ namespace PmsApi.Migrations
                     b.Navigation("Projects");
                 });
 
-            modelBuilder.Entity("PmsApi.Models.Role", b =>
-                {
-                    b.Navigation("Users");
-                });
-
             modelBuilder.Entity("PmsApi.Models.Task", b =>
                 {
                     b.Navigation("TaskAttachments");
+                });
+
+            modelBuilder.Entity("PmsApi.Models.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("PmsApi.Models.User", b =>

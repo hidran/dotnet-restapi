@@ -22,7 +22,7 @@ public class Task
     public DateOnly CreatedDate { get; set; }
     public int ProjectId { get; set; }
 
-    public int? AssignedUserId { get; set; }
+    public string? AssignedUserId { get; set; }
 
     public User? AssignedUser { get; set; }
 

@@ -16,7 +16,7 @@ public class Project
 
     public int CategoryId { get; set; }
 
-    public int ManagerId { get; set; }
+    public string ManagerId { get; set; } = String.Empty;
 
     public ProjectCategory? Category { get; set; }
 

@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Identity;
 
 namespace PmsApi.Models;
 
-public class Role
+public class Role : IdentityRole
 {
-    public int RoleId { get; set; }
-
-    public string RoleName { get; set; } = null!;
 
     public virtual ICollection<User> Users { get; set; } = new List<User>();
 }

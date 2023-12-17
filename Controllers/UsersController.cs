@@ -37,9 +37,9 @@ public class UsersController : ControllerBase
         return Ok(usersDto);
     }
     [HttpGet("{id}")]
-    public async Task<ActionResult<User>> GetUser(int id)
+    public async Task<ActionResult<User>> GetUser(string id)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.UserId == id);
+        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
         if (user is null)
         {
             return NotFound();
@@ -63,7 +63,7 @@ public class UsersController : ControllerBase
             await _context.SaveChangesAsync();
             var newUserDto = _mapper.Map<UserDto>(user);
 
-            return CreatedAtAction(nameof(GetUser), new { id = user.UserId }, newUserDto);
+            return CreatedAtAction(nameof(GetUser), new { id = user.Id }, newUserDto);
         }
         catch (DbUpdateException e)
         when (e.InnerException is MySqlException
@@ -77,9 +77,9 @@ public class UsersController : ControllerBase
             return StatusCode(500, "An error has occurred");
         }
     }
-    [HttpPatch("{userId:int}")]
+    [HttpPatch("{userId}")]
     public async Task<ActionResult> UpdateUser(
-        [FromRoute] int userId, [FromBody] UpdateUserDto userDto
+        [FromRoute] string userId, [FromBody] UpdateUserDto userDto
         )
     {
         if (!ModelState.IsValid)
@@ -115,8 +115,8 @@ public class UsersController : ControllerBase
     }
 
 
-    [HttpDelete("{userId:int}")]
-    public async Task<ActionResult> DeleteUser(int userId)
+    [HttpDelete("{userId}")]
+    public async Task<ActionResult> DeleteUser(string userId)
     {
         User? user = await _context.Users.FindAsync(userId);
 

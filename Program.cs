@@ -1,6 +1,9 @@
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using PmsApi.DataContexts;
+using PmsApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,6 +12,10 @@ var connectionString = builder.Configuration.GetConnectionString("PmsContext");
 
 
 var serverVersion = ServerVersion.AutoDetect(connectionString);
+builder.Services.AddIdentity<User, Role>()
+.AddEntityFrameworkStores<PmsContext>()
+.AddApiEndpoints()
+.AddDefaultTokenProviders();
 builder.Services.AddDbContext<PmsContext>(
     opt => opt.UseMySql(connectionString, serverVersion)
     );
@@ -29,7 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
-
+app.MapIdentityApi<User>();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

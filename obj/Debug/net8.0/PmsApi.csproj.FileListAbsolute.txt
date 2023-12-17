@@ -105,3 +105,4 @@
 /Users/hidranarias/projects/dotnet/PmsApi/bin/Debug/net8.0/AutoMapper.dll
 /Users/hidranarias/projects/dotnet/PmsApi/bin/Debug/net8.0/AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 /Users/hidranarias/projects/dotnet/PmsApi/obj/Debug/net8.0/PmsApi.sourcelink.json
+/Users/hidranarias/projects/dotnet/PmsApi/bin/Debug/net8.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
