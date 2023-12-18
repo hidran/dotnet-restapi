@@ -1,10 +1,9 @@
 namespace PmsApi.DTO;
 
 public record UserOnlyDto(
-    int UserId,
+    string Id,
     string UserName,
     string FirstName,
     string LastName,
-
-    string Email,
-    int RoleId);
+    string Email
+    );
