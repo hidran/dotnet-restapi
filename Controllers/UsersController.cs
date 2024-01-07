@@ -1,5 +1,6 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
@@ -15,11 +16,13 @@ public class UsersController : ControllerBase
 {
     private readonly PmsContext _context;
     private readonly IMapper _mapper;
+    private readonly UserManager<User> _userManager;
 
-    public UsersController(PmsContext context, IMapper mapper)
+    public UsersController(PmsContext context, IMapper mapper, UserManager<User> userManager)
     {
         _context = context;
         _mapper = mapper;
+        _userManager = userManager;
     }
     [HttpGet]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] string include = "")
@@ -58,10 +61,15 @@ public class UsersController : ControllerBase
 
         var user = _mapper.Map<User>(userDto);
 
-        _context.Users.Add(user);
         try
         {
-            await _context.SaveChangesAsync();
+          var result = await _userManager.CreateAsync(user,"Test!123");
+            
+            if (!result.Succeeded)
+            {
+                return StatusCode(500, "An error has occurred creating user");
+            }
+         
             var newUserDto = _mapper.Map<UserDto>(user);
 
             return CreatedAtAction(nameof(GetUser), new { id = user.Id }, newUserDto);
@@ -73,9 +81,9 @@ public class UsersController : ControllerBase
 
             return BadRequest("Email already taken");
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return StatusCode(500, "An error has occurred");
+            return StatusCode(500, $"An error has occurred: {ex.Message}");
         }
     }
     [HttpPatch("{userId}")]
