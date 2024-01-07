@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using PmsApi.DataContexts;
 using PmsApi.Models;
-
+using Microsoft.OpenApi.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -29,7 +29,38 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 });
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(
+    opt =>
+    {
+        opt.AddSecurityDefinition("oauth2",
+             new OpenApiSecurityScheme
+             {
+                 In = ParameterLocation.Header,
+                 Name = "Authorization",
+                 Type = SecuritySchemeType.ApiKey
+             }
+            );
+
+        opt.AddSecurityRequirement(
+           new OpenApiSecurityRequirement
+           {
+                {
+                    new OpenApiSecurityScheme
+                    {
+                        Reference = new OpenApiReference
+                        {
+                            Type = ReferenceType.SecurityScheme,
+                            Id = "oauth2"
+                        }
+
+                    },
+                    []
+
+            }
+           }
+       );
+    }
+    );
 
 var app = builder.Build();
 app.UseAuthorization();
