@@ -11,7 +11,5 @@ public class CreateUserDto
     [Required(ErrorMessage = "Email is required")]
     [EmailAddress]
     public string Email { get; set; } = string.Empty;
-    [Required]
-    [Range(1, int.MaxValue, ErrorMessage = "Role must be great than 1")]
-    public int RoleId { get; set; }
+   
 }

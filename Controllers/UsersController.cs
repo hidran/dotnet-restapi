@@ -28,6 +28,7 @@ public class UsersController : ControllerBase
     public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] string include = "")
     {
         var usersQuery = _context.Users.AsQueryable();
+       
         if (include.Contains("projects", StringComparison.OrdinalIgnoreCase))
         {
             usersQuery = usersQuery.Include(u => u.Projects);
@@ -43,7 +44,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(string id)
     {
-        User? user = await _context.Users.FirstOrDefaultAsync(u => u.Id == id);
+        User? user = await _userManager.FindByIdAsync(id);
         if (user is null)
         {
             return NotFound();
@@ -86,6 +87,7 @@ public class UsersController : ControllerBase
             return StatusCode(500, $"An error has occurred: {ex.Message}");
         }
     }
+
     [HttpPatch("{userId}")]
     public async Task<ActionResult> UpdateUser(
         [FromRoute] string userId, [FromBody] UpdateUserDto userDto
@@ -96,7 +98,7 @@ public class UsersController : ControllerBase
             return BadRequest(ModelState);
         }
 
-        User? user = await _context.Users.FindAsync(userId);
+        User? user = await _userManager.FindByIdAsync(userId);
 
         if (user is null)
         {
@@ -127,7 +129,7 @@ public class UsersController : ControllerBase
     [HttpDelete("{userId}")]
     public async Task<ActionResult> DeleteUser(string userId)
     {
-        User? user = await _context.Users.FindAsync(userId);
+        User? user = await _userManager.FindByIdAsync(userId);
 
         if (user is null)
         {
@@ -135,8 +137,8 @@ public class UsersController : ControllerBase
         }
         try
         {
-            _context.Users.Remove(user);
-            await _context.SaveChangesAsync();
+           await _userManager.DeleteAsync(user);
+          
             return NoContent();
         }
         catch (DbUpdateException e)

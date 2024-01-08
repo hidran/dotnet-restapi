@@ -17,7 +17,6 @@ public class UpdateUserDto
 
     [Required(ErrorMessage = "Last name is required.")]
     public string LastName { get; set; } = string.Empty;
-    [Required]
-    [Range(1, int.MaxValue, ErrorMessage = "Role must be great than 1")]
-    public int RoleId { get; set; }
+  
+   
 }
