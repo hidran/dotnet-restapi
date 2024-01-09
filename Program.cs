@@ -11,7 +11,11 @@ var connectionString = builder.Configuration.GetConnectionString("PmsContext");
 
 
 var serverVersion = ServerVersion.AutoDetect(connectionString);
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization( opt =>
+{
+    opt.AddPolicy("IsAdmin", p => p.RequireRole(["Admin"]));
+    opt.AddPolicy("IsSuperAdmin", p => p.RequireClaim("SuperAdmin"));
+});
 builder.Services
 .AddIdentityApiEndpoints<User>()
 .AddRoles<Role>()

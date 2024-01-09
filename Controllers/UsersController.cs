@@ -11,7 +11,7 @@ using PmsApi.Models;
 namespace PmsApi.Controllers;
 
 [ApiController]
-[Route("api/users"), Authorize]
+[Route("api/users"), Authorize( Policy = "IsAdmin")]
 public class UsersController : ControllerBase
 {
     private readonly PmsContext _context;
@@ -24,9 +24,10 @@ public class UsersController : ControllerBase
         _mapper = mapper;
         _userManager = userManager;
     }
-    [HttpGet]
+    [HttpGet, AllowAnonymous]
     public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] string include = "")
     {
+       
         var usersQuery = _context.Users.AsQueryable();
        
         if (include.Contains("projects", StringComparison.OrdinalIgnoreCase))
@@ -44,6 +45,7 @@ public class UsersController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<User>> GetUser(string id)
     {
+        var isAdmin = HttpContext.User.IsInRole("Admin");
         User? user = await _userManager.FindByIdAsync(id);
         if (user is null)
         {
@@ -52,7 +54,8 @@ public class UsersController : ControllerBase
         var userDto = _mapper.Map<UserDto>(user);
         return Ok(userDto);
     }
-    [HttpPost]
+
+    [HttpPost, Authorize(Roles = "Admin, Editor")]
     public async Task<ActionResult> CreateUser([FromBody] CreateUserDto userDto)
     {
         if (!ModelState.IsValid)
