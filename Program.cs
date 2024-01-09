@@ -14,7 +14,7 @@ var serverVersion = ServerVersion.AutoDetect(connectionString);
 builder.Services.AddAuthorization();
 builder.Services
 .AddIdentityApiEndpoints<User>()
-//.AddIdentity<User, Role>()
+.AddRoles<Role>()
 .AddEntityFrameworkStores<PmsContext>()
 .AddApiEndpoints()
 .AddDefaultTokenProviders();

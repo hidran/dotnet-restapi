@@ -70,6 +70,7 @@ public class UsersController : ControllerBase
             {
                 return StatusCode(500, "An error has occurred creating user");
             }
+            await _userManager.AddToRoleAsync(user, "User");
          
             var newUserDto = _mapper.Map<UserDto>(user);
 
