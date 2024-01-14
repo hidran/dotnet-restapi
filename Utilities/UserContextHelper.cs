@@ -14,9 +14,9 @@ namespace PmsApi.Utilities;
     {
        return _httpContext.User.IsInRole("Admin");
     }
-    public  string? GetUserId()
+    public  string GetUserId()
     {
-        return _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+        return _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
     }
 }
 

@@ -18,8 +18,8 @@ public class CreateProjectDto
 
     public int CategoryId { get; set; }
     [Required(ErrorMessage = "Manager id is required")]
-    [Range(1, int.MaxValue, ErrorMessage = "Manager must be greater or equal than 1")]
+   
 
-    public int ManagerId { get; set; }
+    public string ManagerId { get; set; } = string.Empty;
 
 }

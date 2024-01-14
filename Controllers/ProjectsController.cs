@@ -22,6 +22,7 @@ public class ProjectsController : ControllerBase
     {
         _context = context;
         _mapper = mapper;
+   
     }
 
     [HttpGet("{projectId}/tasks")]
@@ -97,9 +98,15 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateProject([FromBody] CreateProjectDto projectDto)
     {
+        
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
+        }
+        var userHelper = new UserContextHelper(HttpContext);
+        if (!userHelper.IsAdmin())
+        {
+            projectDto.ManagerId = userHelper.GetUserId();
         }
 
         var project = _mapper.Map<Project>(projectDto);

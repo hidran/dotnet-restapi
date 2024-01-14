@@ -13,5 +13,5 @@ public record ProjectDto(
 
      int CategoryId,
 
-     int ManagerId
+     string ManagerId
 );
