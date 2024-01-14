@@ -3042,11 +3042,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\hidranarias\\Source\\Repos\\dotnet-restapi\\PmsApi.csproj",
+      "projectUniqueName": "C:\\Users\\hidranarias\\source\\repos\\dotnetrestapi\\PmsApi.csproj",
       "projectName": "PmsApi",
-      "projectPath": "C:\\Users\\hidranarias\\Source\\Repos\\dotnet-restapi\\PmsApi.csproj",
+      "projectPath": "C:\\Users\\hidranarias\\source\\repos\\dotnetrestapi\\PmsApi.csproj",
       "packagesPath": "C:\\Users\\hidranarias\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\hidranarias\\Source\\Repos\\dotnet-restapi\\obj\\",
+      "outputPath": "C:\\Users\\hidranarias\\source\\repos\\dotnetrestapi\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

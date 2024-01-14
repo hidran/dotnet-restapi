@@ -1,4 +1,5 @@
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
@@ -6,11 +7,12 @@ using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
-
+using PmsApi.Utilities;
 namespace PmsApi.Controllers;
 
 [ApiController]
-[Route("api/projects")]
+[Route("api/projects"), Authorize]
+
 public class ProjectsController : ControllerBase
 {
     private readonly PmsContext _context;
@@ -41,6 +43,8 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();
+        var userHelper = new UserContextHelper(HttpContext);
+
         if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
         {
             projectsQuery = projectsQuery.Include(p => p.Tasks);
@@ -53,6 +57,12 @@ public class ProjectsController : ControllerBase
         {
             projectsQuery = projectsQuery.Include(p => p.Category);
         }
+
+        if (!userHelper.IsAdmin())
+        {
+            projectsQuery.Where(p => p.ManagerId == userHelper.GetUserId());
+        }
+
         var projects = await projectsQuery.ToListAsync();
         var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(projects);
         return Ok(projectsDto);

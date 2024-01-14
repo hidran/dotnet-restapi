@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "lAgWthemJSxTN3IUOoh/nXxRFMfZLZ/vr5VxUWfMoJhHyAV/6atP+zWJIw4qTY7PBZ7H9P74oZGxxRcqX8BAcQ==",
+  "dgSpecHash": "EXheNHlcAPZlz/bm5hN/kp6aLssokiwODWfj0PZt8/2X/Ap42mvIW8L05gLsh1nN0zHdQlXGE0vw0toRovvKNw==",
   "success": true,
-  "projectFilePath": "C:\\Users\\hidranarias\\source\\repos\\dotnet-restapi\\PmsApi.csproj",
+  "projectFilePath": "C:\\Users\\hidranarias\\source\\repos\\dotnetrestapi\\PmsApi.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\hidranarias\\.nuget\\packages\\automapper\\12.0.1\\automapper.12.0.1.nupkg.sha512",
     "C:\\Users\\hidranarias\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\12.0.1\\automapper.extensions.microsoft.dependencyinjection.12.0.1.nupkg.sha512",
