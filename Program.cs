@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PmsApi.DataContexts;
 using PmsApi.Models;
 using Microsoft.OpenApi.Models;
+using PmsApi.Utilities;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -23,15 +24,17 @@ builder.Services
 .AddApiEndpoints()
 .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext<PmsContext>(
+builder.Services.AddDbContext< PmsContext>(
     opt => opt.UseMySql(connectionString, serverVersion)
     );
 builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
     options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
 
 });
+builder.Services.AddScoped<IUserContextHelper, UserContextHelper>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     opt =>

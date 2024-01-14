@@ -17,12 +17,13 @@ public class ProjectsController : ControllerBase
 {
     private readonly PmsContext _context;
     private readonly IMapper _mapper;
+    private readonly IUserContextHelper _userContextHelper;
 
-    public ProjectsController(PmsContext context, IMapper mapper)
+    public ProjectsController(PmsContext context, IMapper mapper, IUserContextHelper userContextHelper )
     {
         _context = context;
         _mapper = mapper;
-   
+        _userContextHelper = userContextHelper;
     }
 
     [HttpGet("{projectId}/tasks")]
@@ -44,7 +45,7 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();
-        var userHelper = new UserContextHelper(HttpContext);
+      
 
         if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
         {
@@ -59,9 +60,9 @@ public class ProjectsController : ControllerBase
             projectsQuery = projectsQuery.Include(p => p.Category);
         }
 
-        if (!userHelper.IsAdmin())
+        if (!_userContextHelper.IsAdmin())
         {
-            projectsQuery.Where(p => p.ManagerId == userHelper.GetUserId());
+            projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
         }
 
         var projects = await projectsQuery.ToListAsync();
@@ -103,10 +104,10 @@ public class ProjectsController : ControllerBase
         {
             return BadRequest(ModelState);
         }
-        var userHelper = new UserContextHelper(HttpContext);
-        if (!userHelper.IsAdmin())
+       
+        if (!_userContextHelper.IsAdmin())
         {
-            projectDto.ManagerId = userHelper.GetUserId();
+            projectDto.ManagerId = _userContextHelper.GetUserId();
         }
 
         var project = _mapper.Map<Project>(projectDto);

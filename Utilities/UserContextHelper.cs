@@ -2,21 +2,21 @@
 
 namespace PmsApi.Utilities;
 
-    public class UserContextHelper
-    {
-    private readonly HttpContext _httpContext;
+public class UserContextHelper : IUserContextHelper
+{
+    private readonly IHttpContextAccessor _httpContextAccessor;
 
-    public UserContextHelper(HttpContext httpContext)
+    public UserContextHelper(IHttpContextAccessor httpContextAccessor)
     {
-        _httpContext = httpContext;
+        _httpContextAccessor = httpContextAccessor;
     }
-    public   bool IsAdmin()
+    public bool IsAdmin()
     {
-       return _httpContext.User.IsInRole("Admin");
+        return _httpContextAccessor.HttpContext?.User.IsInRole("Admin") ?? false;
     }
-    public  string GetUserId()
+    public string GetUserId()
     {
-        return _httpContext.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
+        return _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.NameIdentifier) ?? string.Empty;
     }
 }
 
