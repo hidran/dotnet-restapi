@@ -547,19 +547,19 @@ namespace PmsApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "0e32808f-df1a-4da3-99a2-3b93d3f0c8aa",
+                            Id = "eefcc751-ade7-4494-a396-3a4c12b93c9e",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
-                            Id = "b2f874f5-f58c-4c74-b179-a6696b8ec166",
+                            Id = "6ad7a109-05d2-464f-8649-171301fcd4fb",
                             Name = "Editor",
                             NormalizedName = "Editor"
                         },
                         new
                         {
-                            Id = "538cfac7-1b7c-4fff-b614-a0b55e9562f6",
+                            Id = "a75d0f2b-3361-4620-af8b-6d29ecea3829",
                             Name = "User",
                             NormalizedName = "User"
                         });
@@ -585,14 +585,14 @@ namespace PmsApi.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "7b461bb1-cfb9-477d-9ef0-c68d4969a384",
+                            Id = "ef0ccdcd-ea56-4752-aece-8d0761e4fc87",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "6c7ed0c9-1583-4591-baaa-3ac4cec09994",
+                            ConcurrencyStamp = "7ab3cc9c-0ff7-4919-9608-e4eecf98aad9",
                             Email = "emma.stone@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "761060db-7c3d-4df8-90e5-a7b5b7a5361c",
+                            SecurityStamp = "e9a1520e-9787-4957-bab8-5d9545fbf37e",
                             TwoFactorEnabled = false,
                             UserName = "user1",
                             FirstName = "Emma",
@@ -600,14 +600,14 @@ namespace PmsApi.Migrations
                         },
                         new
                         {
-                            Id = "1a628e2f-7437-44cc-a0e3-60e2e830462d",
+                            Id = "7724d07e-0785-4022-b67b-27bfa4102e3a",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0d385d0c-14fa-41d2-87e8-26d8c3e1bfcf",
+                            ConcurrencyStamp = "9b3d1099-2f3d-4d07-9139-c49b8c5d6ead",
                             Email = "liam.smith@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "5cccfef3-5b42-434d-8a95-aaad0e1be1b1",
+                            SecurityStamp = "e6d44e19-d1f7-4f12-88e7-6a8b4f4769e2",
                             TwoFactorEnabled = false,
                             UserName = "user2",
                             FirstName = "Liam",
@@ -615,14 +615,14 @@ namespace PmsApi.Migrations
                         },
                         new
                         {
-                            Id = "766536f2-6966-42ba-92e6-abbd044b285e",
+                            Id = "40abac7e-5f79-4a3a-8093-7ae38d7cbfbf",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "2edd87b7-3176-4047-8e77-6a041ccecc9c",
+                            ConcurrencyStamp = "8fd5a088-dac9-4874-bf1c-0b5008762c74",
                             Email = "olivia.jones@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "3db0760f-45fb-4634-a495-072a8e5c6479",
+                            SecurityStamp = "afeae931-10a7-46be-8428-7f0800b0d497",
                             TwoFactorEnabled = false,
                             UserName = "user3",
                             FirstName = "Olivia",
@@ -630,14 +630,14 @@ namespace PmsApi.Migrations
                         },
                         new
                         {
-                            Id = "03297460-25e5-455f-aa9c-2e2dabaf2e40",
+                            Id = "151634d1-7226-4205-939a-bd6ffb2134f2",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "d6a75347-1260-4fa9-8e06-0c26454b85cb",
+                            ConcurrencyStamp = "c2c00cd8-2bd9-4f92-b801-93ef2c865104",
                             Email = "noah.brown@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "181e9b89-3b79-4649-bc1d-761b296a24d3",
+                            SecurityStamp = "20d66fec-ab83-4a45-8165-2d07d609f2ec",
                             TwoFactorEnabled = false,
                             UserName = "user4",
                             FirstName = "Noah",
@@ -645,14 +645,14 @@ namespace PmsApi.Migrations
                         },
                         new
                         {
-                            Id = "4da805c0-248e-4943-9289-59135d249a5f",
+                            Id = "f788a89f-9198-4738-b238-66e9fa563ee5",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "53bcc1c7-a77e-4646-a386-33dc84ab532f",
+                            ConcurrencyStamp = "0c7e4f51-d728-4222-b9d7-1af3c292e9e4",
                             Email = "jacob.williams@mail.com",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "c0de5adc-dc0a-4070-9439-0794227e9ea1",
+                            SecurityStamp = "b5ae135f-7de9-4d56-bae8-e9ff6c1d373b",
                             TwoFactorEnabled = false,
                             UserName = "user5",
                             FirstName = "Jacob",

@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace PmsApi.Migrations
 {
     /// <inheritdoc />
-    public partial class IdentityUpdate : Migration
+    public partial class projectd : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -367,9 +367,9 @@ namespace PmsApi.Migrations
                 columns: new[] { "Id", "ConcurrencyStamp", "Discriminator", "Name", "NormalizedName" },
                 values: new object[,]
                 {
-                    { "0e32808f-df1a-4da3-99a2-3b93d3f0c8aa", null, "Role", "Admin", "ADMIN" },
-                    { "538cfac7-1b7c-4fff-b614-a0b55e9562f6", null, "Role", "User", "User" },
-                    { "b2f874f5-f58c-4c74-b179-a6696b8ec166", null, "Role", "Editor", "Editor" }
+                    { "6ad7a109-05d2-464f-8649-171301fcd4fb", null, "Role", "Editor", "Editor" },
+                    { "a75d0f2b-3361-4620-af8b-6d29ecea3829", null, "Role", "User", "User" },
+                    { "eefcc751-ade7-4494-a396-3a4c12b93c9e", null, "Role", "Admin", "ADMIN" }
                 });
 
             migrationBuilder.InsertData(
@@ -377,11 +377,11 @@ namespace PmsApi.Migrations
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Discriminator", "Email", "EmailConfirmed", "FirstName", "LastName", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "RoleId", "SecurityStamp", "TwoFactorEnabled", "UserName" },
                 values: new object[,]
                 {
-                    { "03297460-25e5-455f-aa9c-2e2dabaf2e40", 0, "d6a75347-1260-4fa9-8e06-0c26454b85cb", "User", "noah.brown@mail.com", false, "Noah", "Brown", false, null, null, null, null, null, false, null, "181e9b89-3b79-4649-bc1d-761b296a24d3", false, "user4" },
-                    { "1a628e2f-7437-44cc-a0e3-60e2e830462d", 0, "0d385d0c-14fa-41d2-87e8-26d8c3e1bfcf", "User", "liam.smith@mail.com", false, "Liam", "Smith", false, null, null, null, null, null, false, null, "5cccfef3-5b42-434d-8a95-aaad0e1be1b1", false, "user2" },
-                    { "4da805c0-248e-4943-9289-59135d249a5f", 0, "53bcc1c7-a77e-4646-a386-33dc84ab532f", "User", "jacob.williams@mail.com", false, "Jacob", "Williams", false, null, null, null, null, null, false, null, "c0de5adc-dc0a-4070-9439-0794227e9ea1", false, "user5" },
-                    { "766536f2-6966-42ba-92e6-abbd044b285e", 0, "2edd87b7-3176-4047-8e77-6a041ccecc9c", "User", "olivia.jones@mail.com", false, "Olivia", "Jones", false, null, null, null, null, null, false, null, "3db0760f-45fb-4634-a495-072a8e5c6479", false, "user3" },
-                    { "7b461bb1-cfb9-477d-9ef0-c68d4969a384", 0, "6c7ed0c9-1583-4591-baaa-3ac4cec09994", "User", "emma.stone@mail.com", false, "Emma", "Stone", false, null, null, null, null, null, false, null, "761060db-7c3d-4df8-90e5-a7b5b7a5361c", false, "user1" }
+                    { "151634d1-7226-4205-939a-bd6ffb2134f2", 0, "c2c00cd8-2bd9-4f92-b801-93ef2c865104", "User", "noah.brown@mail.com", false, "Noah", "Brown", false, null, null, null, null, null, false, null, "20d66fec-ab83-4a45-8165-2d07d609f2ec", false, "user4" },
+                    { "40abac7e-5f79-4a3a-8093-7ae38d7cbfbf", 0, "8fd5a088-dac9-4874-bf1c-0b5008762c74", "User", "olivia.jones@mail.com", false, "Olivia", "Jones", false, null, null, null, null, null, false, null, "afeae931-10a7-46be-8428-7f0800b0d497", false, "user3" },
+                    { "7724d07e-0785-4022-b67b-27bfa4102e3a", 0, "9b3d1099-2f3d-4d07-9139-c49b8c5d6ead", "User", "liam.smith@mail.com", false, "Liam", "Smith", false, null, null, null, null, null, false, null, "e6d44e19-d1f7-4f12-88e7-6a8b4f4769e2", false, "user2" },
+                    { "ef0ccdcd-ea56-4752-aece-8d0761e4fc87", 0, "7ab3cc9c-0ff7-4919-9608-e4eecf98aad9", "User", "emma.stone@mail.com", false, "Emma", "Stone", false, null, null, null, null, null, false, null, "e9a1520e-9787-4957-bab8-5d9545fbf37e", false, "user1" },
+                    { "f788a89f-9198-4738-b238-66e9fa563ee5", 0, "0c7e4f51-d728-4222-b9d7-1af3c292e9e4", "User", "jacob.williams@mail.com", false, "Jacob", "Williams", false, null, null, null, null, null, false, null, "b5ae135f-7de9-4d56-bae8-e9ff6c1d373b", false, "user5" }
                 });
 
             migrationBuilder.InsertData(

@@ -6,11 +6,12 @@ using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers;
 
 [ApiController]
-[Route("api/statuses")]
+[Route("api/statuses"), Authorize(Policy = "IsAdmin")]
 public class StatusController : ControllerBase
 {
     private readonly PmsContext _context;

@@ -3,7 +3,7 @@ using PmsApi.Models;
 namespace PmsApi.DTO;
 
 public record ProjectWithTasksDto(
- int ProjectId,
+ string ProjectId,
      string ProjectName,
 
      string? Description,
@@ -14,7 +14,7 @@ public record ProjectWithTasksDto(
 
      int CategoryId,
 
-     int ManagerId,
+     string ManagerId,
      ICollection<TaskDto> Tasks,
     UserOnlyDto Manager,
     CategoryDto Category

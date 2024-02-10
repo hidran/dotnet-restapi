@@ -17,7 +17,7 @@ public record TaskDto(
      DateOnly CreatedDate,
      int ProjectId,
 
-     int AssignedUserId
+     string AssignedUserId
 
 
 

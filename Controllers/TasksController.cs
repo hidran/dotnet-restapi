@@ -5,15 +5,18 @@ using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Utilities;
 using Task = PmsApi.Models.Task;
+using Microsoft.AspNetCore.Authorization;
+
 namespace PmsApi.Controllers;
 
 [ApiController]
-[Route("api/tasks")]
+[Route("api/tasks"), Authorize]
 public class TasksController : ControllerBase
 {
     private readonly IMapper _mapper;
     private readonly PmsContext _context;
-    public TasksController(PmsContext pmsContext, IMapper mapper)
+    private readonly IUserContextHelper _userContextHelper;
+    public TasksController(PmsContext pmsContext, IMapper mapper, IUserContextHelper userContextHelper)
     {
         _context = pmsContext;
         _mapper = mapper;

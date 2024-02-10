@@ -21,7 +21,7 @@ public record TaskAllDto(
 
      int ProjectId,
 
-     int AssignedUserId,
+     string AssignedUserId,
     UserOnlyDto AssignedUser,
 
     ProjectDto Project,

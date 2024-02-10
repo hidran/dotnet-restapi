@@ -19,7 +19,7 @@ public class ProjectsController : ControllerBase
     private readonly IMapper _mapper;
     private readonly IUserContextHelper _userContextHelper;
 
-    public ProjectsController(PmsContext context, IMapper mapper, IUserContextHelper userContextHelper )
+    public ProjectsController(PmsContext context, IMapper mapper, IUserContextHelper userContextHelper)
     {
         _context = context;
         _mapper = mapper;
@@ -30,10 +30,12 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjectTasks(int projectId)
     {
 
-        var project = await _context.Projects.Include(p => p.Tasks)
-            .Where(p => p.ProjectId == projectId)
-
-        .ToListAsync();
+        var projectsQuery = _context.Projects.Include(p => p.Tasks).Where(p => p.ProjectId == projectId);
+        if (!_userContextHelper.IsAdmin())
+        {
+            projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
+        }
+        var project = await projectsQuery.ToListAsync();
         if (project is null || project.Count == 0)
         {
             return NotFound();
@@ -45,7 +47,7 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();
-      
+
 
         if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
         {
@@ -99,12 +101,12 @@ public class ProjectsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult> CreateProject([FromBody] CreateProjectDto projectDto)
     {
-        
+
         if (!ModelState.IsValid)
         {
             return BadRequest(ModelState);
         }
-       
+
         if (!_userContextHelper.IsAdmin())
         {
             projectDto.ManagerId = _userContextHelper.GetUserId();

@@ -6,11 +6,12 @@ using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Controllers;
 
 [ApiController]
-[Route("api/priorities")]
+[Route("api/priorities"), Authorize(Policy = "IsAdmin")]
 public class PrioritiesController : ControllerBase
 {
     private readonly PmsContext _context;

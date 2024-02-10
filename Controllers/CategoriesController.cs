@@ -2,6 +2,7 @@ using AutoMapper;
 using DTO;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Authorization;
 using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
@@ -10,7 +11,8 @@ using PmsApi.Models;
 namespace Controllers;
 
 [ApiController]
-[Route("api/categories")]
+[Route("api/categories"), Authorize(Policy = "IsAdmin")]
+
 public class CategoriesController : ControllerBase
 {
     private readonly PmsContext _context;

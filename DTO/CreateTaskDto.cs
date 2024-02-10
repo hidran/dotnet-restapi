@@ -25,7 +25,6 @@ public class CreateTaskDto
 
     public int ProjectId { get; set; }
     [Required(ErrorMessage = "Assigned user is required")]
-    [Range(1, int.MaxValue, ErrorMessage = "User must be greater or equal than 1")]
 
-    public int AssignedUserId { get; set; }
+    public string AssignedUserId { get; set; }
 }
