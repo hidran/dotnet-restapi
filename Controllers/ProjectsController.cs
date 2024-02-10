@@ -2,17 +2,17 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
 using PmsApi.Utilities;
+
 namespace PmsApi.Controllers;
 
 [ApiController]
-[Route("api/projects"), Authorize]
-
+[Route("api/projects")]
+[Authorize]
 public class ProjectsController : ControllerBase
 {
     private readonly PmsContext _context;
@@ -29,43 +29,29 @@ public class ProjectsController : ControllerBase
     [HttpGet("{projectId}/tasks")]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjectTasks(int projectId)
     {
-
         var projectsQuery = _context.Projects.Include(p => p.Tasks).Where(p => p.ProjectId == projectId);
         if (!_userContextHelper.IsAdmin())
-        {
-            projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
-        }
+            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
         var project = await projectsQuery.ToListAsync();
-        if (project is null || project.Count == 0)
-        {
-            return NotFound();
-        }
+        if (project is null || project.Count == 0) return NotFound();
         var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(project);
         return Ok(projectsDto);
     }
-    [HttpGet()]
+
+    [HttpGet]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();
 
 
         if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
-        {
             projectsQuery = projectsQuery.Include(p => p.Tasks);
-        }
         if (include.Contains("manager", StringComparison.OrdinalIgnoreCase))
-        {
             projectsQuery = projectsQuery.Include(p => p.Manager);
-        }
         if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
-        {
             projectsQuery = projectsQuery.Include(p => p.Category);
-        }
 
-        if (!_userContextHelper.IsAdmin())
-        {
-            projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
-        }
+        if (!_userContextHelper.IsAdmin()) projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
 
         var projects = await projectsQuery.ToListAsync();
         var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(projects);
@@ -77,40 +63,28 @@ public class ProjectsController : ControllerBase
     public async Task<ActionResult<ProjectWithTasksDto>> GetProject(int projectId, [FromQuery] string include = "")
     {
         var projectsQuery = _context.Projects.AsQueryable();
-        if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
-        {
-            projectsQuery = projectsQuery.Include(p => p.Tasks);
-        }
-        if (include.Contains("manager", StringComparison.OrdinalIgnoreCase))
-        {
-            projectsQuery = projectsQuery.Include(p => p.Manager);
-        }
-        if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
-        {
-            projectsQuery = projectsQuery.Include(p => p.Category);
-        }
+        if (!_userContextHelper.IsAdmin())
+            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
 
-        Project? project = await projectsQuery.FirstOrDefaultAsync(p => p.ProjectId == projectId);
-        if (project is null)
-        {
-            return NotFound();
-        }
+        if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
+            projectsQuery = projectsQuery.Include(p => p.Tasks);
+        if (include.Contains("manager", StringComparison.OrdinalIgnoreCase))
+            projectsQuery = projectsQuery.Include(p => p.Manager);
+        if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
+            projectsQuery = projectsQuery.Include(p => p.Category);
+
+        var project = await projectsQuery.FirstOrDefaultAsync(p => p.ProjectId == projectId);
+        if (project is null) return NotFound();
         var projectDto = _mapper.Map<ProjectWithTasksDto>(project);
         return Ok(projectDto);
     }
+
     [HttpPost]
     public async Task<ActionResult> CreateProject([FromBody] CreateProjectDto projectDto)
     {
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
-
-        if (!_userContextHelper.IsAdmin())
-        {
-            projectDto.ManagerId = _userContextHelper.GetUserId();
-        }
+        if (!_userContextHelper.IsAdmin()) projectDto.ManagerId = _userContextHelper.GetUserId();
 
         var project = _mapper.Map<Project>(projectDto);
 
@@ -121,13 +95,12 @@ public class ProjectsController : ControllerBase
             var newProjectDto = _mapper.Map<ProjectDto>(project);
 
             return CreatedAtAction(nameof(GetProject),
-            new { projectId = project.ProjectId }, newProjectDto);
+                new { projectId = project.ProjectId }, newProjectDto);
         }
         catch (DbUpdateException e)
-        when (e.InnerException is MySqlException
-         mySqlException && mySqlException.Number == 1062)
+            when (e.InnerException is MySqlException
+                      mySqlException && mySqlException.Number == 1062)
         {
-
             return BadRequest("project name already taken");
         }
         catch (Exception)
@@ -135,22 +108,18 @@ public class ProjectsController : ControllerBase
             return StatusCode(500, "An error has occurred");
         }
     }
+
     [HttpPut("{projectId:int}")]
     public async Task<ActionResult> UpdateProject(
         [FromRoute] int projectId, [FromBody] CreateProjectDto projectDto
-        )
+    )
     {
-        if (!ModelState.IsValid)
-        {
-            return BadRequest(ModelState);
-        }
+        if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        Project? project = await _context.Projects.FindAsync(projectId);
+        var project = await _context.Projects.FindAsync(projectId);
 
-        if (project is null)
-        {
-            return NotFound($"Project with ID {projectId} not found.");
-        }
+        if (project is null) return NotFound($"Project with ID {projectId} not found.");
+        if (!_userContextHelper.IsAdmin() && project.ManagerId != _userContextHelper.GetUserId()) return Unauthorized();
 
         _mapper.Map(projectDto, project);
         try
@@ -160,10 +129,9 @@ public class ProjectsController : ControllerBase
             return NoContent();
         }
         catch (DbUpdateException e)
-        when (e.InnerException is MySqlException
-         mySqlException && mySqlException.Number == 1062)
+            when (e.InnerException is MySqlException
+                      mySqlException && mySqlException.Number == 1062)
         {
-
             return BadRequest("Project name already taken");
         }
         catch (Exception)
@@ -176,12 +144,11 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{projectId:int}")]
     public async Task<ActionResult> DeleteProject(int projectId)
     {
-        Project? project = await _context.Projects.FindAsync(projectId);
+        var project = await _context.Projects.FindAsync(projectId);
 
-        if (project is null)
-        {
-            return NotFound($"No project found with ID {projectId}");
-        }
+        if (project is null) return NotFound($"No project found with ID {projectId}");
+        if (!_userContextHelper.IsAdmin() && project.ManagerId != _userContextHelper.GetUserId()) return Unauthorized();
+
         try
         {
             _context.Projects.Remove(project);
@@ -189,15 +156,13 @@ public class ProjectsController : ControllerBase
             return NoContent();
         }
         catch (DbUpdateException e)
-      when (e.InnerException is MySqlException)
+            when (e.InnerException is MySqlException)
         {
-
             return BadRequest("Project has other records, please delete assigned tasks");
         }
         catch (Exception)
         {
             return StatusCode(500, "An error has occurred");
         }
-
     }
 }
