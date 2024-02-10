@@ -5,6 +5,7 @@ using PmsApi.DataContexts;
 using PmsApi.Models;
 using Microsoft.OpenApi.Models;
 using PmsApi.Utilities;
+using PmsApi.Services;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -12,7 +13,7 @@ var connectionString = builder.Configuration.GetConnectionString("PmsContext");
 
 
 var serverVersion = ServerVersion.AutoDetect(connectionString);
-builder.Services.AddAuthorization( opt =>
+builder.Services.AddAuthorization(opt =>
 {
     opt.AddPolicy("IsAdmin", p => p.RequireRole(["Admin"]));
     opt.AddPolicy("IsSuperAdmin", p => p.RequireClaim("SuperAdmin"));
@@ -24,7 +25,7 @@ builder.Services
 .AddApiEndpoints()
 .AddDefaultTokenProviders();
 
-builder.Services.AddDbContext< PmsContext>(
+builder.Services.AddDbContext<PmsContext>(
     opt => opt.UseMySql(connectionString, serverVersion)
     );
 builder.Services.AddAutoMapper(typeof(Program));
@@ -35,6 +36,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 
 });
 builder.Services.AddScoped<IUserContextHelper, UserContextHelper>();
+builder.Services.AddScoped<IProjectService, ProjectService>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(
     opt =>

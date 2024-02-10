@@ -6,6 +6,7 @@ using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
 using PmsApi.Models;
+using PmsApi.Services;
 using PmsApi.Utilities;
 
 namespace PmsApi.Controllers;
@@ -15,12 +16,16 @@ namespace PmsApi.Controllers;
 [Authorize]
 public class ProjectsController : ControllerBase
 {
+    private readonly IProjectService _projectService;
     private readonly PmsContext _context;
     private readonly IMapper _mapper;
     private readonly IUserContextHelper _userContextHelper;
 
-    public ProjectsController(PmsContext context, IMapper mapper, IUserContextHelper userContextHelper)
+    public ProjectsController(PmsContext context, IMapper mapper,
+     IUserContextHelper userContextHelper, IProjectService projectService
+     )
     {
+        _projectService = projectService;
         _context = context;
         _mapper = mapper;
         _userContextHelper = userContextHelper;
@@ -29,13 +34,16 @@ public class ProjectsController : ControllerBase
     [HttpGet("{projectId}/tasks")]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjectTasks(int projectId)
     {
-        var projectsQuery = _context.Projects.Include(p => p.Tasks).Where(p => p.ProjectId == projectId);
-        if (!_userContextHelper.IsAdmin())
-            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
-        var project = await projectsQuery.ToListAsync();
-        if (project is null || project.Count == 0) return NotFound();
-        var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(project);
-        return Ok(projectsDto);
+        var userId = _userContextHelper.GetUserId();
+        var isAdmin = _userContextHelper.IsAdmin();
+
+        var projectTasks = await _projectService.GetProjectTasksAsync(projectId, userId, isAdmin);
+
+        if (projectTasks is null)
+        {
+            return NotFound();
+        }
+        return Ok(projectTasks);
     }
 
     [HttpGet]
@@ -51,7 +59,11 @@ public class ProjectsController : ControllerBase
         if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
             projectsQuery = projectsQuery.Include(p => p.Category);
 
-        if (!_userContextHelper.IsAdmin()) projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
+        if (!_userContextHelper.IsAdmin())
+        {
+            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
+        }
+
 
         var projects = await projectsQuery.ToListAsync();
         var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(projects);

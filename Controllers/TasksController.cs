@@ -88,6 +88,7 @@ public class TasksController : ControllerBase
         var task = await _context.Tasks.FindAsync(taskId);
 
         if (task is null) return NotFound($"Project with ID {taskId} not found.");
+
         if (!_userContextHelper.IsAdmin() && task.AssignedUserId != _userContextHelper.GetUserId())
             return Unauthorized();
         _mapper.Map(taskDto, task);
@@ -143,6 +144,7 @@ public class TasksController : ControllerBase
         var task = await _context.Tasks.Include(t => t.TaskAttachments).Where(t => t.TaskId == taskId)
             .FirstOrDefaultAsync();
         if (task is null) return NotFound($"No Task found with ID {taskId}");
+        
         if (!_userContextHelper.IsAdmin() && task.AssignedUserId != _userContextHelper.GetUserId())
             return Unauthorized();
         var taskAttachments = task.TaskAttachments;
