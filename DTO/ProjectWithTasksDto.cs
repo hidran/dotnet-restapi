@@ -3,7 +3,7 @@ using PmsApi.Models;
 namespace PmsApi.DTO;
 
 public record ProjectWithTasksDto(
- string ProjectId,
+ int ProjectId,
      string ProjectName,
 
      string? Description,

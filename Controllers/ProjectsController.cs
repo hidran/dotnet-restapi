@@ -2,6 +2,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 using MySqlConnector;
 using PmsApi.DataContexts;
 using PmsApi.DTO;
@@ -34,8 +35,8 @@ public class ProjectsController : ControllerBase
     [HttpGet("{projectId}/tasks")]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjectTasks(int projectId)
     {
-        var userId = _userContextHelper.GetUserId();
-        var isAdmin = _userContextHelper.IsAdmin();
+
+        GetUserCredentials(out string userId, out bool isAdmin);
 
         var projectTasks = await _projectService.GetProjectTasksAsync(projectId, userId, isAdmin);
 
@@ -46,27 +47,18 @@ public class ProjectsController : ControllerBase
         return Ok(projectTasks);
     }
 
+    private void GetUserCredentials(out string userId, out bool isAdmin)
+    {
+        userId = _userContextHelper.GetUserId();
+        isAdmin = _userContextHelper.IsAdmin();
+    }
+
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ProjectWithTasksDto>>> GetProjects([FromQuery] string include = "")
     {
-        var projectsQuery = _context.Projects.AsQueryable();
+        GetUserCredentials(out string userId, out bool isAdmin);
 
-
-        if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Tasks);
-        if (include.Contains("manager", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Manager);
-        if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Category);
-
-        if (!_userContextHelper.IsAdmin())
-        {
-            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
-        }
-
-
-        var projects = await projectsQuery.ToListAsync();
-        var projectsDto = _mapper.Map<IEnumerable<ProjectWithTasksDto>>(projects);
+        var projectsDto = await _projectService.GetProjectsAsync(userId, isAdmin, include);
         return Ok(projectsDto);
     }
 
@@ -74,20 +66,12 @@ public class ProjectsController : ControllerBase
     [HttpGet("{projectId}")]
     public async Task<ActionResult<ProjectWithTasksDto>> GetProject(int projectId, [FromQuery] string include = "")
     {
-        var projectsQuery = _context.Projects.AsQueryable();
-        if (!_userContextHelper.IsAdmin())
-            projectsQuery = projectsQuery.Where(p => p.ManagerId == _userContextHelper.GetUserId());
-
-        if (include.Contains("tasks", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Tasks);
-        if (include.Contains("manager", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Manager);
-        if (include.Contains("category", StringComparison.OrdinalIgnoreCase))
-            projectsQuery = projectsQuery.Include(p => p.Category);
-
-        var project = await projectsQuery.FirstOrDefaultAsync(p => p.ProjectId == projectId);
-        if (project is null) return NotFound();
-        var projectDto = _mapper.Map<ProjectWithTasksDto>(project);
+        GetUserCredentials(out string userId, out bool isAdmin);
+        var projectDto = await _projectService.GetProjectAsync(projectId, userId, isAdmin, include);
+        if (projectDto is null)
+        {
+            return NotFound($"Project with id {projectId} not found");
+        }
         return Ok(projectDto);
     }
 
@@ -96,18 +80,15 @@ public class ProjectsController : ControllerBase
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
 
-        if (!_userContextHelper.IsAdmin()) projectDto.ManagerId = _userContextHelper.GetUserId();
+        GetUserCredentials(out string userId, out bool isAdmin);
 
-        var project = _mapper.Map<Project>(projectDto);
 
-        _context.Projects.Add(project);
         try
         {
-            await _context.SaveChangesAsync();
-            var newProjectDto = _mapper.Map<ProjectDto>(project);
 
+            var newProjectDto = await _projectService.CreateProjectAsync(projectDto, userId, isAdmin);
             return CreatedAtAction(nameof(GetProject),
-                new { projectId = project.ProjectId }, newProjectDto);
+                new { projectId = newProjectDto.ProjectId }, newProjectDto);
         }
         catch (DbUpdateException e)
             when (e.InnerException is MySqlException
@@ -127,16 +108,20 @@ public class ProjectsController : ControllerBase
     )
     {
         if (!ModelState.IsValid) return BadRequest(ModelState);
+        GetUserCredentials(out string userId, out bool isAdmin);
 
-        var project = await _context.Projects.FindAsync(projectId);
 
-        if (project is null) return NotFound($"Project with ID {projectId} not found.");
-        if (!_userContextHelper.IsAdmin() && project.ManagerId != _userContextHelper.GetUserId()) return Unauthorized();
-
-        _mapper.Map(projectDto, project);
         try
         {
-            await _context.SaveChangesAsync();
+            var result = await _projectService.UpdateProjectAsync(projectId, projectDto, userId, isAdmin);
+            if (result is null)
+            {
+                return NotFound();
+            }
+            if (result is false)
+            {
+                return StatusCode(500, "An error has occurred");
+            }
 
             return NoContent();
         }
@@ -156,15 +141,17 @@ public class ProjectsController : ControllerBase
     [HttpDelete("{projectId:int}")]
     public async Task<ActionResult> DeleteProject(int projectId)
     {
-        var project = await _context.Projects.FindAsync(projectId);
-
-        if (project is null) return NotFound($"No project found with ID {projectId}");
-        if (!_userContextHelper.IsAdmin() && project.ManagerId != _userContextHelper.GetUserId()) return Unauthorized();
+        GetUserCredentials(out string userId, out bool isAdmin);
 
         try
         {
-            _context.Projects.Remove(project);
-            await _context.SaveChangesAsync();
+            var result = await _projectService.DeleteProjectAsync(projectId, userId, isAdmin);
+            if (result is null)
+            {
+                return NotFound();
+            }
+
+
             return NoContent();
         }
         catch (DbUpdateException e)
